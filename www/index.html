@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Simple MJPEG Streamer on Tornado</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js" ></script>
 </head>
-<body>
-    <img width = 640 height = 480 src="\video_feed">
+<body background="/image/bg.jpg">
+    <h1>Tornado mjpeg streamer</h1>
+    <div class="center">
+        <p>Simple demo app of mjpeg streamer based on async tornado
+        http server. Can be helpful for smart home solution for remote control.
+        Easy to run good works on Raspberry PI</p>
+    </div>
+    <div>
+        <div class="video">
+            <img width = 700 height = 525 src="\video_feed">
+        </div>
+        <div class="btncenter">
+            <a href="#" class="btnstyle" id="low">Low res</a>
+            <a href="#" class="btnstyle" id="norm">Norm res</a>
+            <a href="#" class="btnstyle" id="hi">Hi res</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -12,7 +12,6 @@ html_page_path = dir_path = os.path.dirname(os.path.realpath(__file__)) + '/www'
 
 
 class HtmlPageHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
     def get(self, file_name='index.html'):
         # fill header fields
         self.set_header('Connection', 'close')
@@ -29,6 +28,7 @@ class HtmlPageHandler(tornado.web.RequestHandler):
 
         self.write(payload)
         self.flush()
+        self.finish()
 
 
 class SetParamsHandler(tornado.web.RequestHandler):
@@ -78,11 +78,9 @@ def make_app():
         (r'/video_feed', StreamHandler),
         (r'/setparams', SetParamsHandler),
         (r'/(?P<file_name>[^\/]+htm[l]?)+', HtmlPageHandler),
-        (r'/(?:image|css|js)/(.*)', tornado.web.StaticFileHandler, {
-                                                                 'path': './image',
-                                                                 'path': './css',
-                                                                 'path': './js'
-                                                                })
+        (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': './image'}),
+        (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': './css'}),
+        (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': './js'})
     ])
 
 

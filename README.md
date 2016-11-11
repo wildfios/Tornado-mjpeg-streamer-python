@@ -7,7 +7,9 @@ Simple demo app of **mjpeg** streamer based on async **tornado** http server. Ca
 ## Instalation
 
 Brouser must support HTML5
-Download files from git to any directory on your PC. You have to install Tornado framework end OpenCV for Python 2.7- pip install tornado
+Download files from git to any directory on your PC. You have to install Tornado framework end OpenCV for Python 2.7
+
+- pip install tornado
 - pip install gen
 - pip install pyopencv
 
