@@ -6,16 +6,20 @@ import video
 import gen
 import os
 
+
 cam = None
 html_page_path = dir_path = os.path.dirname(os.path.realpath(__file__)) + '/www'
 
 
-class IndexHandler(tornado.web.RequestHandler):
-    def get(self):
+class HtmlPageHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self, file_name='index.html'):
+        # fill header fields
         self.set_header('Connection', 'close')
         self.set_header('Content-Type', 'text/html')
 
-        index_page = os.path.join(html_page_path, 'index.html')
+        # format path to page
+        index_page = os.path.join(html_page_path, file_name)
         if os.path.exists(index_page):
             page = open(index_page)
             payload = page.read()
@@ -27,9 +31,19 @@ class IndexHandler(tornado.web.RequestHandler):
         self.flush()
 
 
-class HtmlPageHandler(tornado.web.RequestHandler):
-    def get(self, page_name):
-        self.write('page')
+class SetParamsHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def post(self):
+        #print self.request.body
+        # get args from POST request
+        width = int(self.get_argument('width'))
+        height = int(self.get_argument('height'))
+        # try to change resolution
+        try:
+            cam.set_resolution(width, height)
+            self.write({'resp': 'ok'})
+        except:
+            self.write({'resp': 'bad'})
 
 
 class StreamHandler(tornado.web.RequestHandler):
@@ -47,11 +61,10 @@ class StreamHandler(tornado.web.RequestHandler):
         self.set_header('Connection', 'close')
         self.set_header('Content-Type', 'multipart/x-mixed-replace;boundary=--boundarydonotcross')
 
-        boundary = "--boundarydonotcross\n"
         while True:
             # Generating images for mjpeg stream and wraps them into http resp
             img = cam.get_frame()
-            self.write(boundary)
+            self.write("--boundarydonotcross\n")
             self.write("Content-type: image/jpeg\r\n")
             self.write("Content-length: %s\r\n\r\n" % len(img))
             self.write(str(img))
@@ -61,9 +74,15 @@ class StreamHandler(tornado.web.RequestHandler):
 def make_app():
     # add handlers
     return tornado.web.Application([
-        (r'/', IndexHandler),
+        (r'/', HtmlPageHandler),
         (r'/video_feed', StreamHandler),
-        (r'/*\.(html|htm)', HtmlPageHandler)
+        (r'/setparams', SetParamsHandler),
+        (r'/(?P<file_name>[^\/]+htm[l]?)+', HtmlPageHandler),
+        (r'/(?:image|css|js)/(.*)', tornado.web.StaticFileHandler, {
+                                                                 'path': './image',
+                                                                 'path': './css',
+                                                                 'path': './js'
+                                                                })
     ])
 
 

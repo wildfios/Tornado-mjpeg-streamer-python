@@ -8,8 +8,10 @@ class UsbCamera(object):
         # select first video device in system
         self.cam = cv2.VideoCapture(-1)
         # set camera resolution
-        self.cam.set(3, 480)
-        self.cam.set(4, 640)
+        self.w = 800
+        self.h = 600
+        self.cam.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, self.h)
+        self.cam.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, self.w)
 
     def set_resolution(self, new_w, new_h):
         """
@@ -18,9 +20,14 @@ class UsbCamera(object):
         returns: None ore raise exception
         """
         if isinstance(new_h, int) and isinstance(new_w, int):
-            # check if args are int
-            self.cam.set(3, new_h)
-            self.cam.set(4, new_w)
+            # check if args are int and correct
+            if (new_w <= 800) and (new_h <= 600) and \
+               (new_w > 0) and (new_h > 0):
+                self.h = new_h
+                self.w = new_w
+            else:
+                # bad params
+                raise Exception('Bad resolution')
         else:
             # bad params
             raise Exception('Not int value')
@@ -32,6 +39,7 @@ class UsbCamera(object):
         """
         # gets camera picture using OpenCV
         success, image = self.cam.read()
+        image = cv2.resize(image, (self.w, self.h))
         # encoding picture to jpeg
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tostring()
