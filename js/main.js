@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    function chres(w, h){
+    function ChangeRes(w, h){
         var data = new FormData();
         data.append('width', w);
         data.append('height', h);
@@ -11,14 +11,14 @@ $(document).ready(function(){
     }
 
     $("#low").click(function(){
-        chres(100, 100);
+        ChangeRes(320, 240);
 	})
 
 	$("#norm").click(function(){
-        chres(320, 240);
+        ChangeRes(640, 480);
 	})
 
 	$("#hi").click(function(){
-        chres(800, 600);
+        ChangeRes(800, 600);
 	})
 });

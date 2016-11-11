@@ -4,24 +4,31 @@
     <meta charset="UTF-8">
     <title>Simple MJPEG Streamer on Tornado</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/main.js" ></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 <body background="/image/bg.jpg">
-    <h1>Tornado mjpeg streamer</h1>
+    <br>
+    <h1 class="title">Tornado mjpeg streamer</h1>
     <div class="center">
-        <p>Simple demo app of mjpeg streamer based on async tornado
+        <p>Simple demo app of mjpeg streaming. Based on async tornado
         http server. Can be helpful for smart home solution for remote control.
         Easy to run good works on Raspberry PI</p>
     </div>
-    <div>
-        <div class="video">
-            <img width = 700 height = 525 src="\video_feed">
-        </div>
-        <div class="btncenter">
-            <a href="#" class="btnstyle" id="low">Low res</a>
-            <a href="#" class="btnstyle" id="norm">Norm res</a>
-            <a href="#" class="btnstyle" id="hi">Hi res</a>
+    <div class="container-fluid">
+        <div class="row" align="center">
+            <img class="video" src="\video_feed">
+            <br><br>
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary my" id="low">Resolution low</a>
+                <a href="#" class="btn btn-primary my" id="norm">Resolution medium</a>
+                <a href="#" class="btn btn-primary my" id="hi">Resolution hi</a>
+            </div>
+            <div class="row" align="center">
+                <p>Click the button to change size of streamed picture</p>
+            </div>
         </div>
     </div>
 </body>
