@@ -34,16 +34,18 @@ class HtmlPageHandler(tornado.web.RequestHandler):
 class SetParamsHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):
-        #print self.request.body
+        # print self.request.body
         # get args from POST request
         width = int(self.get_argument('width'))
         height = int(self.get_argument('height'))
         # try to change resolution
         try:
+            print(width, height)
             cam.set_resolution(width, height)
             self.write({'resp': 'ok'})
         except:
             self.write({'resp': 'bad'})
+            self.finish()
 
 
 class StreamHandler(tornado.web.RequestHandler):
@@ -63,7 +65,10 @@ class StreamHandler(tornado.web.RequestHandler):
 
         while True:
             # Generating images for mjpeg stream and wraps them into http resp
-            img = cam.get_frame()
+            if self.get_argument('fd') == "true":
+                img = cam.find_face()
+            else:
+                img = cam.get_frame()
             self.write("--boundarydonotcross\n")
             self.write("Content-type: image/jpeg\r\n")
             self.write("Content-length: %s\r\n\r\n" % len(img))

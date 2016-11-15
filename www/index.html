@@ -5,9 +5,11 @@
     <title>Simple MJPEG Streamer on Tornado</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/main.js" ></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-checkbox.min.js"></script>
 </head>
 <body background="/image/bg.jpg">
     <br>
@@ -19,7 +21,7 @@
     </div>
     <div class="container-fluid">
         <div class="row" align="center">
-            <img class="video" src="\video_feed">
+            <img id="videofield" class="video" src="\video_feed?fd=true">
             <br><br>
             <div class="btn-group">
                 <a href="#" class="btn btn-primary my" id="low">Resolution low</a>
@@ -27,7 +29,7 @@
                 <a href="#" class="btn btn-primary my" id="hi">Resolution hi</a>
             </div>
             <div class="row" align="center">
-                <p>Click the button to change size of streamed picture</p>
+                <p>Click the button to change size of streamed picture, enable face detect? <input name="agree" type="checkbox"></p>
             </div>
         </div>
     </div>

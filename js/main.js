@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+    $(':checkbox').checkboxpicker();
+
     function ChangeRes(w, h){
         var data = new FormData();
         data.append('width', w);
@@ -21,4 +23,13 @@ $(document).ready(function(){
 	$("#hi").click(function(){
         ChangeRes(800, 600);
 	})
+
+	$(':checkbox').checkboxpicker().change(function() {
+        if($('input[name="agree"]:checked').length > 0) {
+            document.getElementById("videofield").src="video_feed?fd=true";
+        }
+        else{
+            document.getElementById("videofield").src="video_feed?fd=false";
+        }
+    });
 });
