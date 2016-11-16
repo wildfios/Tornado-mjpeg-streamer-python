@@ -40,7 +40,6 @@ class SetParamsHandler(tornado.web.RequestHandler):
         height = int(self.get_argument('height'))
         # try to change resolution
         try:
-            print(width, height)
             cam.set_resolution(width, height)
             self.write({'resp': 'ok'})
         except:

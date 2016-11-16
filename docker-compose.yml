@@ -1,0 +1,10 @@
+tornado:
+  image: ibotdotout/python-opencv
+  volumes:
+    - ./:/code
+  devices:
+     - /dev/video0:/dev/video0
+  working_dir: /code
+  ports:
+    - 8080:8080
+  command: /bin/bash -c "pip install -r requirements.txt && python start.py"

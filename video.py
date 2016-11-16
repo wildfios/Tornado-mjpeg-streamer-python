@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import cv2
+import numpy as np
 
 
 class UsbCamera(object):
@@ -43,32 +44,43 @@ class UsbCamera(object):
         """
         # gets camera picture using OpenCV
         success, image = self.cam.read()
-        # scale image
-        image = cv2.resize(image, (self.w, self.h))
+        if success:
+            # scale image
+            image = cv2.resize(image, (self.w, self.h))
+        else:
+            image = np.zeros((self.h, self.w, 3), np.uint8)
+            cv2.putText(image, 'No camera', (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
         # encoding picture to jpeg
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tostring()
 
     def find_face(self):
+        """
+        functionality: Gets frame from camera and try to find feces on it
+        :return: byte array of jpeg encoded camera frame
+        """
         success, image = self.cam.read()
-        # scale image
-        image = cv2.resize(image, (self.w, self.h))
-        # resize image for speeding up recognize
-        gray = cv2.resize(image, (320, 240))
-        # make it grayscale
-        gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
-        # face cascade detector
-        faces = self.face_cascade.detectMultiScale(gray)
-        # draw rect on face arias
-        scale = float(self.w / 320.0)
-        count = 0
-        for f in faces:
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            x, y, z, t = [int(float(v) * scale) for v in f]
-            cv2.putText(image, str(x) + ' ' + str(y), (0, (self.h - 10 - 25 * count)), font, 1, (0, 0, 0), 2)
-            count += 1
-            cv2.rectangle(image, (x, y), (x + z, y + t), (255, 255, 255), 2)
-
+        if success:
+            # scale image
+            image = cv2.resize(image, (self.w, self.h))
+            # resize image for speeding up recognize
+            gray = cv2.resize(image, (320, 240))
+            # make it grayscale
+            gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
+            # face cascade detector
+            faces = self.face_cascade.detectMultiScale(gray)
+            # draw rect on face arias
+            scale = float(self.w / 320.0)
+            count = 0
+            for f in faces:
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                x, y, z, t = [int(float(v) * scale) for v in f]
+                cv2.putText(image, str(x) + ' ' + str(y), (0, (self.h - 10 - 25 * count)), font, 1, (0, 0, 0), 2)
+                count += 1
+                cv2.rectangle(image, (x, y), (x + z, y + t), (255, 255, 255), 2)
+        else:
+            image = np.zeros((self.h, self.w, 3), np.uint8)
+            cv2.putText(image, 'No camera', (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
         # encoding picture to jpeg
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tostring()
