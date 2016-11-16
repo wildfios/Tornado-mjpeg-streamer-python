@@ -1,5 +1,5 @@
 tornado:
-  image: ibotdotout/python-opencv
+  image: ibotdotout/python-opencv:latest
   volumes:
     - ./:/code
   devices:
@@ -7,4 +7,4 @@ tornado:
   working_dir: /code
   ports:
     - 8080:8080
-  command: /bin/bash -c "pip install -r requirements.txt && python start.py"
+  command: /bin/bash -c "ln /dev/null /dev/raw1394 && pip install -r requirements.txt && exec python start.py"
