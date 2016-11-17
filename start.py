@@ -65,9 +65,9 @@ class StreamHandler(tornado.web.RequestHandler):
         while True:
             # Generating images for mjpeg stream and wraps them into http resp
             if self.get_argument('fd') == "true":
-                img = cam.find_face()
+                img = cam.get_frame(True)
             else:
-                img = cam.get_frame()
+                img = cam.get_frame(False)
             self.write("--boundarydonotcross\n")
             self.write("Content-type: image/jpeg\r\n")
             self.write("Content-length: %s\r\n\r\n" % len(img))
