@@ -2,33 +2,30 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 import tornado.process
+import tornado.template
 import video
 import gen
 import os
 
 
 cam = None
-html_page_path = dir_path = os.path.dirname(os.path.realpath(__file__)) + '/www'
+html_page_path = dir_path = os.path.dirname(os.path.realpath(__file__)) + '/www/'
 
 
 class HtmlPageHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
     def get(self, file_name='index.html'):
-        # fill header fields
-        self.set_header('Connection', 'close')
-        self.set_header('Content-Type', 'text/html')
-
-        # format path to page
+        # Check if page exists
         index_page = os.path.join(html_page_path, file_name)
         if os.path.exists(index_page):
-            page = open(index_page)
-            payload = page.read()
-            page.close()
+            # Render it
+            self.render('www/' + file_name)
         else:
-            self.write('<a>Sorry, but page not found</a>')
-
-        self.write(payload)
-        self.flush()
-        self.finish()
+            # Page not found, generate template
+            err_tmpl = tornado.template.Template("<html> Err 404, Page {{ name }} not found</html>")
+            err_html = err_tmpl.generate(name=file_name)
+            # Send response
+            self.finish(err_html)
 
 
 class SetParamsHandler(tornado.web.RequestHandler):
@@ -44,6 +41,7 @@ class SetParamsHandler(tornado.web.RequestHandler):
             self.write({'resp': 'ok'})
         except:
             self.write({'resp': 'bad'})
+            self.flush()
             self.finish()
 
 
@@ -85,7 +83,8 @@ def make_app():
         (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': './image'}),
         (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': './css'}),
         (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': './js'})
-    ])
+        ],
+    )
 
 
 if __name__ == "__main__":
