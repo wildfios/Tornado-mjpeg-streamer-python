@@ -8,13 +8,13 @@ class UsbCamera(object):
     """ Init camera """
     def __init__(self):
         # select first video device in system
-        self.cam = cv2.VideoCapture(-1)
+        self.cam = cv2.VideoCapture(0)
         # set camera resolution
         self.w = 800
         self.h = 600
         # set crop factor
-        self.cam.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, self.h)
-        self.cam.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, self.w)
+        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, self.h)
+        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, self.w)
         # load cascade file
         self.face_cascade = cv2.CascadeClassifier('face.xml')
 
@@ -67,4 +67,4 @@ class UsbCamera(object):
             cv2.putText(image, 'No camera', (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
         # encoding picture to jpeg
         ret, jpeg = cv2.imencode('.jpg', image)
-        return jpeg.tostring()
+        return jpeg.tobytes()
